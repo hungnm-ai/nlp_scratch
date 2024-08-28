@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from tokenizer import BaseTokenizer
 from embedding import embedded_sentence
 
 
@@ -27,6 +26,7 @@ class SelfAttention(nn.Module):
 
 
 if __name__ == '__main__':
+	from embedding import embedded_sentence
 
 	d_in, d_out_kq, d_out_v = 3, 2, 4
 
