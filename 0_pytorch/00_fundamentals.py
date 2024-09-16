@@ -58,9 +58,35 @@ print("Tensor b: ", b.size())
 print("Element-wise multiplication: ", a*b)
 
 # print("Inner product (dot-product): ", torch.dot(a, b))
-# Note that inner product or dot-product only for 2 vectors have same dimention
+# Note that inner product or dot-product only for 2 vectors have same dimention, output is scalar
 print("Matrix multiply: ", a@b.T)
 print("Matrix multiply: ",torch.matmul(a, b.T))
+
+
+### max, min, mean, sum
+
+tensor = torch.rand(size=(2, 3))
+print(tensor)
+
+
+tensor_mean = torch.mean(tensor, dim=1)
+print("tensor_mean: ", tensor_mean, ", dim: ", tensor_mean.size())
+
+tensor_max = torch.max(tensor, dim=-1)
+print("tensor_max: ", tensor_max, "- dim: ", tensor_max.values.size())
+
+### reshape and view
+a = torch.rand(size=(2, 3))
+print(id(a))
+b = a.reshape(3, 2)
+print(id(b))
+
+c = a.view(2, 3)
+print(id(c))
+
+
+
+
 
 
 
