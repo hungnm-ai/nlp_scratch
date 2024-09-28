@@ -1,18 +1,17 @@
-from typing import List, Dict
+from typing import Dict, List
 
 
 class BaseTokenizer:
-	def __init__(self, vocab: Dict[str, int]):
-		self.vocab = vocab
+    def __init__(self, vocab: Dict[str, int]):
+        self.vocab = vocab
 
+    @staticmethod
+    def tokenize(text: str) -> List[str]:
+        tokens = text.replace(",", "").split()
+        return tokens
 
-	@staticmethod
-	def tokenize(text: str) -> List[str]:
-		tokens = text.replace(",", "").split()
-		return tokens
+    def encode(self, text: str) -> List[int]:
+        tokens = self.tokenize(text)
+        ids = [self.vocab[token] for token in tokens]
 
-	def encode(self, text: str) -> List[int]:
-		tokens = self.tokenize(text)
-		ids = [self.vocab[token] for token in tokens]
-
-		return ids
+        return ids

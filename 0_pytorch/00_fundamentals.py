@@ -39,11 +39,11 @@ print("zeros: ", zeros)
 print(torch.arange(0, 10, 1))
 
 # get information of tensor
-tensor_float32 = torch.rand(size=(3, 2), 
-							dtype=torch.float16, 
-							device="cpu")
+tensor_float32 = torch.rand(size=(3, 2), dtype=torch.float16, device="cpu")
 print(tensor_float32)
-print(f"information of tensor_float32- dtype={tensor_float32.dtype}, device={tensor_float32.device}")
+print(
+    f"information of tensor_float32- dtype={tensor_float32.dtype}, device={tensor_float32.device}"
+)
 
 
 ### 2. tensor operations
@@ -55,12 +55,12 @@ print("Tensor a: ", a.size())
 print("Tensor b: ", b.size())
 
 # Element-wise multiplication
-print("Element-wise multiplication: ", a*b)
+print("Element-wise multiplication: ", a * b)
 
 # print("Inner product (dot-product): ", torch.dot(a, b))
 # Note that inner product or dot-product only for 2 vectors have same dimention, output is scalar
-print("Matrix multiply: ", a@b.T)
-print("Matrix multiply: ",torch.matmul(a, b.T))
+print("Matrix multiply: ", a @ b.T)
+print("Matrix multiply: ", torch.matmul(a, b.T))
 
 
 ### max, min, mean, sum
@@ -83,12 +83,3 @@ print(id(b))
 
 c = a.view(2, 3)
 print(id(c))
-
-
-
-
-
-
-
-
-
