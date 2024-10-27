@@ -1,9 +1,8 @@
 import torch
+import torch.nn.functional as F
 from sklearn.datasets import make_circles
 from sklearn.model_selection import train_test_split
-from torch import nn
-from torch import optim
-
+from torch import nn, optim
 
 ### 1. Prepare dataset
 
@@ -11,7 +10,7 @@ from torch import optim
 n_samples = 1000
 
 # Create dataset has shape like circle
-X, y = make_circles(n_samples, noise=0.03, random_state=42)
+X, y = make_circles(n_samples, noise=0.001, random_state=42)
 
 print(f"types of X: {type(X)} - shape: {X.shape}")
 print(f"types of y: {type(y)} - shape: {y.shape}")
@@ -42,22 +41,25 @@ class BaseCls(nn.Module):
 	"""
 	def __init__(self):
 		super().__init__()
-		self.linear1 = nn.Linear(in_features=2, out_features=4, bias=True)
-		self.linear2 = nn.Linear(in_features=4, out_features=2, bias=True)
-		self.linear3 = nn.Linear(in_features=2, out_features=1, bias=True)
-		self.sigmoid = nn.Sigmoid()
+		self.linear1 = nn.Linear(in_features=2, out_features=16, bias=True)
+		# self.linear2 = nn.Linear(in_features=8, out_features=2, bias=True)
+		self.linear3 = nn.Linear(in_features=16, out_features=1, bias=True)
 
 
 
 	def forward(self, x):
 		output1 = self.linear1(x)
-		output2 = self.linear2(output1)
-		output = self.linear3(output2)
+		# output2 = self.linear2(output1)
+		output = self.linear3(output1)
 
-		return self.sigmoid(output)
+		return torch.sigmoid(output)
 
-def metrics(predicts, labels):
-	pass
+def metrics(y_true, y_pred):
+    # Round the output probabilities to get binary predictions (0 or 1)
+    y_pred_class = torch.round(y_pred)
+    correct = torch.eq(y_true, y_pred_class).sum().item()  # Compare the true labels with predicted labels
+    acc = (correct / len(y_pred)) * 100
+    return acc
 
 
 ### 3. Training model
@@ -76,17 +78,17 @@ model = model.to(device)
 loss_fn = nn.BCELoss()
 
 # define optimizer
-optimizer = optim.SGD(params=model.parameters(), lr=0.01)
+optimizer = optim.SGD(params=model.parameters(), lr=0.5)
 
 
-num_epochs = 20
+num_epochs = 100
 
-
+X_train = X_train.to(device)
+y_train = y_train.to(device)
 for epoch in range(1, num_epochs + 1):
 	model.train()
 
-	X_train = X_train.to(device)
-	y_train = y_train.to(device)
+	
 	y_train_predict = model(X_train)
 	y_train_predict = y_train_predict.squeeze()
 	loss = loss_fn(y_train_predict, y_train)
@@ -105,16 +107,19 @@ for epoch in range(1, num_epochs + 1):
 
 	# evaludate
 	model.eval()
-	with torch.inference_mode():
+	with torch.no_grad():
 
 		X_eval = X_eval.to(device)
 		y_eval = y_eval.to(device)
 		y_eval_predict = model(X_eval)
 		y_eval_predict = y_eval_predict.squeeze()
-		print(y_eval_predict)
 		eval_loss = loss_fn(y_eval_predict, y_eval)
 
-	print(f"Epoch {epoch} | Training loss: {loss} - Eval loss: {eval_loss}")
+		train_acc = metrics(y_train, y_train_predict)
+		eval_acc = metrics(y_eval, y_eval_predict)
+
+		print(f"Epoch {epoch} | Training loss: {loss:.4f} | Eval loss: {eval_loss:.4f} | Train Acc: {train_acc:.2f}% | Eval Acc: {eval_acc:.2f}%")
+
 
 
 

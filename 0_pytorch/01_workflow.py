@@ -6,11 +6,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch
+from safetensors.torch import load_file, save_file
 from sklearn.model_selection import train_test_split
 from torch import nn
-from safetensors.torch import save_file, load_file
-
-
 
 torch.manual_seed(42)
 np.random.seed(42)
